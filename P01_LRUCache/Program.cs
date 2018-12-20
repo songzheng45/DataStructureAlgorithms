@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace _01_LRUCache
+namespace P01_LRUCache
 {
     class Program
     {
