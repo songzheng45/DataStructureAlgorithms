@@ -14,7 +14,7 @@ namespace P01_LinearList
         public abstract T GetElem(int index);
 
         // search the element which matches specified element and return its index
-        public abstract int LocateElem(T elem);
+        public abstract int IndexOf(T elem);
 
         // insert a new element at specified index
         public abstract void Insert(int index, T newElem);

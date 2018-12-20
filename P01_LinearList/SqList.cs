@@ -24,17 +24,21 @@ namespace P01_LinearList
         public override void Clear()
         {
             _data = new T[_capacity];
+            _length = 0;
         }
 
         // get an element base on index
-        public override T GetElem(int index)
+        public override T GetElem(int position)
         {
-            if (index < 0 || index >= _length) return default(T);
-            return _data[index];
+            if (position < 0 || position > _length)
+            {
+                throw new IndexOutOfRangeException("Position was outside the bounds of the list");
+            }
+            return _data[position - 1];
         }
 
         // search the element which matches specified element and return its index
-        public override int LocateElem(T elem)
+        public override int IndexOf(T elem)
         {
             if (_length == 0) return -1;
             if (_data[0].Equals(elem)) return 0;
@@ -44,6 +48,7 @@ namespace P01_LinearList
             while (start < _length - 1)
             {
                 if (_data[start].Equals(elem)) return start;
+                start++;
                 continue;
             }
 
@@ -66,13 +71,15 @@ namespace P01_LinearList
             }
 
             // to loop array from last position until finding the target position
-            int k;
-            for (k = _length - 1; k >= position - 1; k--)
+            if (position <= _length)
             {
-                _data[k + 1] = _data[k];
+                for (int k = _length - 1; k >= position - 1; k--)
+                {
+                    _data[k + 1] = _data[k];
 
+                }
             }
-            _data[k] = newElem;
+            _data[position - 1] = newElem;
 
             _length++;
         }
@@ -80,20 +87,15 @@ namespace P01_LinearList
         // delete an element base on its index
         public override T Delete(int position)
         {
-            if (position < 0)
+            if (position < 1 || position > _length)
             {
-                throw new IndexOutOfRangeException("Index must be a positive integer");
+                throw new IndexOutOfRangeException("Position must be in the bound of list");
             }
 
-            if (position >= _length)
+            var elem = _data[position - 1];
+            for (int k = position; k < _length; k++)
             {
-                throw new IndexOutOfRangeException("Index must be valid");
-            }
-
-            var elem = _data[position];
-            for (int start = position; start < _length - 1; start++)
-            {
-                _data[start] = _data[start + 1];
+                _data[k - 1] = _data[k];
             }
 
             _length--;

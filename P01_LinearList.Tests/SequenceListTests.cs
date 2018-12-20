@@ -32,7 +32,7 @@ namespace SequenceListTests
         }
 
         [Fact]
-        public void Insert_ThrowIndexOutOfRangeException_When_PostionGreaterThanListLength()
+        public void Insert_ThrowIndexOutOfRangeException_When_PostionGreaterThanLength()
         {
             _sqlist.Insert(1, 1);
             Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Insert(3, 1));
@@ -40,20 +40,181 @@ namespace SequenceListTests
         }
 
         [Fact]
-        public void Insert_ThrowIndexOutOfRangeException_When_PostionLessThan_1()
+        public void Insert_ThrowIndexOutOfRangeException_When_PostionLessThanOne()
         {
             Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Insert(0, 1));
             Assert.Equal("Position was outside the bounds of the list", ex.Message);
         }
 
         [Fact]
-        public void Insert_Some_Elements_Return_All()
+        public void Insert_ThrowIndexOutOfRangeException_When_List_Is_Full()
         {
             _sqlist.Insert(1, 10);
             _sqlist.Insert(2, 9);
             _sqlist.Insert(3, 8);
+            _sqlist.Insert(4, 7);
+            _sqlist.Insert(5, 6);
+            _sqlist.Insert(6, 5);
+            _sqlist.Insert(7, 4);
+            _sqlist.Insert(8, 3);
+            _sqlist.Insert(9, 2);
+            _sqlist.Insert(10, 1);
 
-            Assert.Equal("10,9,8", _sqlist.ToString());
+            Exception ex = Assert.Throws<OutOfMemoryException>(() => _sqlist.Insert(11, 101));
+            Assert.IsType<OutOfMemoryException>(ex);
+        }
+
+        [Fact]
+        public void Delete_ThrowIndexOutOfRangeException_When_PositionLessThanOne()
+        {
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Delete(0));
+            Assert.Equal("Position must be in the bound of list", ex.Message);
+        }
+
+        [Fact]
+        public void Delete_ThrowIndexOutOfRangeException_When_PositionGreaterThanLength()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Delete(3));
+            Assert.Equal("Position must be in the bound of list", ex.Message);
+        }
+
+        [Fact]
+        public void Delete_First_Element()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+
+            var elem = _sqlist.Delete(1);
+            Assert.Equal(11, elem);
+        }
+
+        [Fact]
+        public void Delete_Last_Element()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            var elem = _sqlist.Delete(3);
+            Assert.Equal(33, elem);
+        }
+
+        [Fact]
+        public void Delete_Middle_Element()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            var elem = _sqlist.Delete(2);
+            Assert.Equal(22, elem);
+        }
+
+        [Fact]
+        public void GetElem_ThrowsIndexOutOfRangeException_When_PostionLessThanZero()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.GetElem(0));
+            Assert.IsType<IndexOutOfRangeException>(ex);
+        }
+
+        [Fact]
+        public void GetElem_ThrowsIndexOutOfRangeException_When_PostionGreaterThanLength()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.GetElem(4));
+            Assert.IsType<IndexOutOfRangeException>(ex);
+        }
+
+        [Fact]
+        public void GetElem_Last_Position_Return_33()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+
+            var elem = _sqlist.GetElem(3);
+
+            Assert.Equal(33, elem);
+        }
+
+        [Fact]
+        public void GetElem_First_Position_Return_11()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+
+            var elem = _sqlist.GetElem(1);
+
+            Assert.Equal(11, elem);
+        }
+
+        [Fact]
+        public void IndexOf_Return_Netagive1_When_Element_Not_Exist()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            var elem = _sqlist.IndexOf(55);
+
+            Assert.Equal(-1, elem);
+        }
+
+        [Fact]
+        public void IndexOf_Return_First_Index()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            var elem = _sqlist.IndexOf(11);
+
+            Assert.Equal(0, elem);
+        }
+
+        [Fact]
+        public void IndexOf_Return_Last_Index()
+        {
+            _sqlist.Insert(1, 11);
+            _sqlist.Insert(2, 22);
+            _sqlist.Insert(3, 33);
+
+            var elem = _sqlist.IndexOf(33);
+
+            Assert.Equal(2, elem);
+        }
+
+        [Fact]
+        public void Clear_Throw_If_List_IsNot_Empty()
+        {
+            _sqlist.Insert(1, 10);
+            _sqlist.Insert(2, 9);
+            _sqlist.Insert(3, 8);
+            _sqlist.Insert(4, 7);
+            _sqlist.Insert(5, 6);
+            _sqlist.Insert(6, 5);
+            _sqlist.Insert(7, 4);
+            _sqlist.Insert(8, 3);
+            _sqlist.Insert(9, 2);
+            _sqlist.Insert(10, 1);
+
+            Assert.Equal(10, _sqlist.Length);
+
+            _sqlist.Clear();
+
+            Assert.Equal(0, _sqlist.Length);
         }
     }
 }
