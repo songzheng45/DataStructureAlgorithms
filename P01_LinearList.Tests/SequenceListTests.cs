@@ -119,7 +119,7 @@ namespace SequenceListTests
             _sqlist.Insert(2, 22);
             _sqlist.Insert(3, 33);
 
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.GetElem(0));
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Find(0));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
@@ -130,7 +130,7 @@ namespace SequenceListTests
             _sqlist.Insert(2, 22);
             _sqlist.Insert(3, 33);
 
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.GetElem(4));
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqlist.Find(4));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
@@ -142,7 +142,7 @@ namespace SequenceListTests
             _sqlist.Insert(3, 33);
 
 
-            var elem = _sqlist.GetElem(3);
+            var elem = _sqlist.Find(3);
 
             Assert.Equal(33, elem);
         }
@@ -155,7 +155,7 @@ namespace SequenceListTests
             _sqlist.Insert(3, 33);
 
 
-            var elem = _sqlist.GetElem(1);
+            var elem = _sqlist.Find(1);
 
             Assert.Equal(11, elem);
         }
@@ -197,7 +197,7 @@ namespace SequenceListTests
         }
 
         [Fact]
-        public void Clear_Throw_If_List_IsNot_Empty()
+        public void Clear_Length_Equal_Zero_If_Empty()
         {
             _sqlist.Insert(1, 10);
             _sqlist.Insert(2, 9);

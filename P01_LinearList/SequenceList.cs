@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Text;
 
@@ -28,7 +28,7 @@ namespace P01_LinearList
         }
 
         // get an element base on index
-        public override T GetElem(int position)
+        public override T Find(int position)
         {
             if (position < 0 || position > _length)
             {

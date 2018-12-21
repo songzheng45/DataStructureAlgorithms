@@ -11,7 +11,7 @@ namespace P01_LinearList
         public abstract void Clear();
 
         // get an element base on index
-        public abstract T GetElem(int index);
+        public abstract T Find(int index);
 
         // search the element which matches specified element and return its index
         public abstract int IndexOf(T elem);
