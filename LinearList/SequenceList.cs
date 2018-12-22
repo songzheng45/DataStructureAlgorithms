@@ -4,7 +4,7 @@ using System.Text;
 
 namespace LinearList
 {
-    public class SequenceList<T> : BaseList<T> where T : IEquatable<T>
+    public class SequenceList<T> where T : IEquatable<T>
     {
         private T[] _data;
         private int _capacity;
@@ -18,45 +18,10 @@ namespace LinearList
         }
 
         // length of list
-        public override int Length => _length;
+        public int Length => _length;
 
-        // clear list
-        public override void Clear()
-        {
-            _data = new T[_capacity];
-            _length = 0;
-        }
-
-        // get an element base on index
-        public override T Find(int position)
-        {
-            if (position < 0 || position > _length)
-            {
-                throw new IndexOutOfRangeException("Position was outside the bounds of the list");
-            }
-            return _data[position - 1];
-        }
-
-        // search the element which matches specified element and return its index
-        public override int IndexOf(T elem)
-        {
-            if (_length == 0) return -1;
-            if (_data[0].Equals(elem)) return 0;
-            if (_data[_length - 1].Equals(elem)) return _length - 1;
-
-            int start = 0;
-            while (start < _length - 1)
-            {
-                if (_data[start].Equals(elem)) return start;
-                start++;
-                continue;
-            }
-
-            return -1;
-        }
-
-        // insert a new element at specified index
-        public override void Insert(int position, T newElem)
+        // insert a new element at specified position (position start from 1)
+        public void Insert(int position, T newElem)
         {
             Console.WriteLine("Insert position is " + position);
 
@@ -84,8 +49,36 @@ namespace LinearList
             _length++;
         }
 
-        // delete an element base on its index
-        public override T Delete(int position)
+        // get an element base on index
+        public T Find(int position)
+        {
+            if (position < 0 || position > _length)
+            {
+                throw new IndexOutOfRangeException("Position was outside the bounds of the list");
+            }
+            return _data[position - 1];
+        }
+
+        // search the element which matches specified element and return its index (index start from 0)
+        public int IndexOf(T elem)
+        {
+            if (_length == 0) return -1;
+            if (_data[0].Equals(elem)) return 0;
+            if (_data[_length - 1].Equals(elem)) return _length - 1;
+
+            int start = 0;
+            while (start < _length - 1)
+            {
+                if (_data[start].Equals(elem)) return start;
+                start++;
+                continue;
+            }
+
+            return -1;
+        }
+
+        // delete an element which is on the specified position (position from 1)
+        public T Delete(int position)
         {
             if (position < 1 || position > _length)
             {
@@ -103,19 +96,12 @@ namespace LinearList
             return elem;
         }
 
-        public override string ToString()
+
+        // clear list
+        public void Clear()
         {
-            if (_length == 0) return string.Empty;
-
-            var builder = new StringBuilder();
-            for (int idx = 0; idx < _length; idx++)
-            {
-                T item = _data[idx];
-                builder.Append($"{item.ToString()}");
-                if (idx < _length - 1) builder.Append(",");
-            }
-
-            return builder.ToString();
+            _data = new T[_capacity];
+            _length = 0;
         }
     }
 }
