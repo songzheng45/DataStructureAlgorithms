@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Text;
 
-namespace P01_LinearList
+namespace LinearList
 {
     public class SequenceList<T> : BaseList<T> where T : IEquatable<T>
     {

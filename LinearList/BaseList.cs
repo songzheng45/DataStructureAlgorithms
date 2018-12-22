@@ -1,6 +1,6 @@
 using System;
 
-namespace P01_LinearList
+namespace LinearList
 {
     public abstract class BaseList<T>
     {

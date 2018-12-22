@@ -3,9 +3,9 @@ using System.Runtime.CompilerServices;
 using Xunit;
 using Xunit.Sdk;
 using Xunit.Abstractions;
-using P01_LinearList;
+using LinearList;
 
-namespace SequenceListTests
+namespace LinearList_Tests
 {
     public class SequenceListTests
     {

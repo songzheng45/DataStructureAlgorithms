@@ -1,6 +1,6 @@
 using System;
 
-namespace P01_LinearList
+namespace LinearList
 {
     // single linked list
     public class SingleLinkedList
