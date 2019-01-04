@@ -5,8 +5,7 @@ namespace LinearList
     // single linked list
     public class SingleLinkedList<T> where T : IEquatable<T>
     {
-        private int _length;
-        private LinkedListNode<T> _head;
+        private readonly LinkedListNode<T> _head;
 
         public SingleLinkedList()
         {
@@ -15,13 +14,12 @@ namespace LinearList
 
         // Head node
         public LinkedListNode<T> First => _head.Next;
-        public LinkedListNode<T> Last { get; set; }
 
-        public int Length => _length;
+        public int Length { get; private set; }
 
         public void Insert(int position, T newElem)
         {
-            if (position < 1 || position > _length + 1)
+            if (position < 1 || position > Length + 1)
             {
                 throw new IndexOutOfRangeException("Position must be in bound of list");
             }
@@ -39,12 +37,12 @@ namespace LinearList
             newNode.Next = p.Next;
             p.Next = newNode;
 
-            _length++;
+            Length++;
         }
 
         public LinkedListNode<T> Find(int position)
         {
-            LinkedListNode<T> p = _head.Next;
+            LinkedListNode<T> p = First;
             int j = 1;
 
             while (p != null && j < position)
@@ -77,7 +75,7 @@ namespace LinearList
 
         public LinkedListNode<T> Delete(int position)
         {
-            if (position < 1 || position > _length)
+            if (position < 1 || position > Length)
             {
                 return null;
             }
@@ -93,7 +91,7 @@ namespace LinearList
             var q = p.Next;
             p.Next = q.Next;
 
-            _length--;
+            Length--;
 
             return q;
         }
@@ -108,9 +106,40 @@ namespace LinearList
 
                 cur = q;
             }
-            _length = 0;
+
+            Length = 0;
         }
 
+        /// <summary>
+        /// reverse current list
+        /// </summary>
+        public void Reverse()
+        {
+            if (Length <= 1) return;
 
+            LinkedListNode<T> p = First;
+            LinkedListNode<T> q = First.Next;
+
+            LinkedListNode<T> r = null;
+
+            p.Next = null;
+            while (q != null)
+            {
+                r = q.Next;
+
+                q.Next = p;
+                p = q;
+                q = r;
+            }
+
+            _head.Next = p;
+        }
+
+        /// <summary>
+        /// 环的检测
+        /// </summary>
+        public void IsCircular()
+        {
+        }
     }
 }

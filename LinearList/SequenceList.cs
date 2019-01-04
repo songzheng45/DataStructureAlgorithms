@@ -4,13 +4,13 @@ using System.Text;
 
 namespace LinearList
 {
-    public class SequenceList<T> where T : IEquatable<T>
+    public sealed class SequenceList<T>
     {
         private T[] _data;
         private int _capacity;
         private int _length;
 
-        public SequenceList(int capacity)
+        public SequenceList (int capacity)
         {
             _data = new T[capacity];
             _capacity = capacity;
@@ -21,18 +21,16 @@ namespace LinearList
         public int Length => _length;
 
         // insert a new element at specified position (position start from 1)
-        public void Insert(int position, T newElem)
+        public void Insert (int position, T newElem)
         {
-            Console.WriteLine("Insert position is " + position);
-
             if (_length == _capacity)
             {
-                throw new OutOfMemoryException("List has now more space");
+                throw new OutOfMemoryException ("List has now more space");
             }
 
             if (position < 1 || position > _length + 1)
             {
-                throw new IndexOutOfRangeException("Position was outside the bounds of the list");
+                throw new IndexOutOfRangeException ("Position was outside the bounds of the list");
             }
 
             // to loop array from last position until finding the target position
@@ -49,27 +47,27 @@ namespace LinearList
             _length++;
         }
 
-        // get an element base on index
-        public T Find(int position)
+        // get an element base on position (position start from 1)
+        public T Find (int position)
         {
             if (position < 0 || position > _length)
             {
-                throw new IndexOutOfRangeException("Position was outside the bounds of the list");
+                throw new IndexOutOfRangeException ("Position was outside the bounds of the list");
             }
             return _data[position - 1];
         }
 
         // search the element which matches specified element and return its index (index start from 0)
-        public int IndexOf(T elem)
+        public int IndexOf (T elem)
         {
             if (_length == 0) return -1;
-            if (_data[0].Equals(elem)) return 0;
-            if (_data[_length - 1].Equals(elem)) return _length - 1;
+            if (_data[0].Equals (elem)) return 0;
+            if (_data[_length - 1].Equals (elem)) return _length - 1;
 
             int start = 0;
             while (start < _length - 1)
             {
-                if (_data[start].Equals(elem)) return start;
+                if (_data[start].Equals (elem)) return start;
                 start++;
                 continue;
             }
@@ -77,12 +75,12 @@ namespace LinearList
             return -1;
         }
 
-        // delete an element which is on the specified position (position from 1)
-        public T Delete(int position)
+        // delete an element which is on the specified position (position start from 1)
+        public T Delete (int position)
         {
             if (position < 1 || position > _length)
             {
-                throw new IndexOutOfRangeException("Position must be in the bound of list");
+                throw new IndexOutOfRangeException ("Position must be in the bound of list");
             }
 
             var elem = _data[position - 1];
@@ -96,9 +94,8 @@ namespace LinearList
             return elem;
         }
 
-
         // clear list
-        public void Clear()
+        public void Clear ()
         {
             _data = new T[_capacity];
             _length = 0;

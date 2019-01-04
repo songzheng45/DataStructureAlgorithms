@@ -1,2 +1,2 @@
 # DataStructureAlgorithms
-Data Structures and Algorithms notebook
+Notebook about data structures and algorithms 

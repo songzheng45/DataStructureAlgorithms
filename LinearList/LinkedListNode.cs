@@ -2,11 +2,11 @@ using System;
 
 namespace LinearList
 {
-    public class LinkedListNode<T> where T : IEquatable<T>
+    public class LinkedListNode<T>
     {
         private T _value;
 
-        public LinkedListNode(T value)
+        public LinkedListNode (T value)
         {
             _value = value;
         }
