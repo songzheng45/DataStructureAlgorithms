@@ -2,8 +2,16 @@ using System;
 
 namespace LinearList
 {
-    // single linked list
-    public class SingleLinkedList<T> where T : IEquatable<T>
+    /// <summary>
+    /// 单链表的插入、删除、清空、查找
+    /// 1. 链表反转
+    /// 2. 环的检测
+    /// 3. 两个有序链表的合并
+    /// 4. 删除链表倒数第n个结点
+    /// 5. 求链表的中间结点
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class SingleLinkedList<T> where T : IComparable<T>
     {
         private readonly LinkedListNode<T> _head;
 
@@ -12,12 +20,27 @@ namespace LinearList
             _head = new LinkedListNode<T>(default(T));
         }
 
+        public SingleLinkedList(params T[] list)
+        {
+            _head = new LinkedListNode<T>(default(T));
+            if (list == null) return;
+
+            var p = _head;
+            foreach (var item in list)
+            {
+                var q = new LinkedListNode<T>(item);
+                p.Next = q;
+                p = q;
+            }
+        }
+
         // Head node
         public LinkedListNode<T> First => _head.Next;
+        public LinkedListNode<T> Head => _head;
 
         public int Length { get; private set; }
 
-        public void Insert(int position, T newElem)
+        public LinkedListNode<T> Insert(int position, T newElem)
         {
             if (position < 1 || position > Length + 1)
             {
@@ -38,6 +61,8 @@ namespace LinearList
             p.Next = newNode;
 
             Length++;
+
+            return newNode;
         }
 
         public LinkedListNode<T> Find(int position)
@@ -138,8 +163,70 @@ namespace LinearList
         /// <summary>
         /// 环的检测
         /// </summary>
-        public void IsCircular()
+        /// <remarks>
+        /// 用快慢两个指针，快指针每次移动2个结点，慢指针每次移动1个结点，当两个指针相遇时，说明存在环。
+        /// LeetCode 编号： 141
+        /// </remarks>
+        public bool HasCycle()
         {
+            if (Length == 0) return false;
+
+            var slow = _head.Next;
+            var fast = _head.Next.Next;
+
+            while (fast != null && slow != null && fast != slow)
+            {
+                fast = fast.Next?.Next;
+                slow = slow.Next;
+            }
+
+            bool ret = fast == slow;
+            return ret;
+        }
+
+        /// <summary>
+        /// 合并两个有序链表
+        /// </summary>
+        /// <remarks>LeetCode 编号： 21</remarks>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public SingleLinkedList<T> Merge(SingleLinkedList<T> list)
+        {
+            if (list == null) return this;
+
+            var root = new SingleLinkedList<T>();
+
+            LinkedListNode<T> pointer = root._head;
+
+            var head1 = list.First;
+            var head2 = this.First;
+            while (head1 != null && head2 != null)
+            {
+                if (head1.Value.CompareTo(head2.Value) < 0)
+                {
+                    pointer.Next = head1;
+                    head1 = head1.Next;
+                }
+                else
+                {
+                    pointer.Next = head2;
+                    head2 = head2.Next;
+                }
+
+                pointer = pointer.Next;
+            }
+
+            if (head1 != null)
+            {
+                pointer.Next = head1;
+            }
+
+            if (head2 != null)
+            {
+                pointer.Next = head2;
+            }
+
+            return root;
         }
     }
 }

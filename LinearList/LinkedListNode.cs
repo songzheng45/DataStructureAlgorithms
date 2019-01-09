@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace LinearList
 {
@@ -6,7 +7,7 @@ namespace LinearList
     {
         private T _value;
 
-        public LinkedListNode (T value)
+        public LinkedListNode(T value)
         {
             _value = value;
         }
