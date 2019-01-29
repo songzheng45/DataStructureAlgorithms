@@ -13,30 +13,30 @@ namespace LinearList
     /// <typeparam name="T"></typeparam>
     public class SingleLinkedList<T> where T : IComparable<T>
     {
-        private readonly LinkedListNode<T> _head;
-
         public SingleLinkedList()
         {
-            _head = new LinkedListNode<T>(default(T));
+            Head = new LinkedListNode<T>(default(T));
         }
 
         public SingleLinkedList(params T[] list)
         {
-            _head = new LinkedListNode<T>(default(T));
+            Head = new LinkedListNode<T>(default(T));
             if (list == null) return;
 
-            var p = _head;
+            var p = Head;
             foreach (var item in list)
             {
                 var q = new LinkedListNode<T>(item);
                 p.Next = q;
                 p = q;
             }
+
+            Length = list.Length;
         }
 
         // Head node
-        public LinkedListNode<T> First => _head.Next;
-        public LinkedListNode<T> Head => _head;
+        public LinkedListNode<T> First => Head.Next;
+        public LinkedListNode<T> Head { get; }
 
         public int Length { get; private set; }
 
@@ -47,7 +47,7 @@ namespace LinearList
                 throw new IndexOutOfRangeException("Position must be in bound of list");
             }
 
-            var p = _head;
+            var p = Head;
 
             int j = 1;
             while (p != null && j < position)
@@ -86,16 +86,34 @@ namespace LinearList
 
         public LinkedListNode<T> Find(T elem)
         {
-            LinkedListNode<T> p = _head.Next;
+            LinkedListNode<T> p = Head.Next;
 
             while (p != null)
             {
-                if (p.Value.Equals(elem)) return p;
+                if (p.Value.CompareTo(elem) == 0) return p;
 
                 p = p.Next;
             }
 
             return null;
+        }
+
+        public LinkedListNode<T> Delete(T value)
+        {
+            LinkedListNode<T> cur = Head;
+            while (cur.Next != null && cur.Next.Value.CompareTo(value) != 0)
+            {
+                cur = cur.Next;
+            }
+
+            if (cur.Next == null) return null;
+
+            var q = cur.Next;
+            cur.Next = q.Next;
+
+            Length--;
+
+            return q;
         }
 
         public LinkedListNode<T> Delete(int position)
@@ -105,7 +123,7 @@ namespace LinearList
                 return null;
             }
 
-            var p = _head.Next;
+            var p = First;
             int j = 1;
             while (p != null && j < position - 1)
             {
@@ -123,7 +141,7 @@ namespace LinearList
 
         public void Clear()
         {
-            var cur = _head;
+            var cur = Head;
             while (cur.Next != null)
             {
                 var q = cur.Next;
@@ -157,7 +175,7 @@ namespace LinearList
                 q = r;
             }
 
-            _head.Next = p;
+            Head.Next = p;
         }
 
         /// <summary>
@@ -171,8 +189,8 @@ namespace LinearList
         {
             if (Length == 0) return false;
 
-            var slow = _head.Next;
-            var fast = _head.Next.Next;
+            var slow = Head.Next;
+            var fast = Head.Next.Next;
 
             while (fast != null && slow != null && fast != slow)
             {
@@ -185,21 +203,22 @@ namespace LinearList
         }
 
         /// <summary>
-        /// 合并两个有序链表
+        /// 合并两个有序链表(从小到大)
         /// </summary>
         /// <remarks>LeetCode 编号： 21</remarks>
         /// <param name="list"></param>
         /// <returns></returns>
         public SingleLinkedList<T> Merge(SingleLinkedList<T> list)
         {
-            if (list == null) return this;
+            if (list == null) return null;
 
             var root = new SingleLinkedList<T>();
 
-            LinkedListNode<T> pointer = root._head;
+            LinkedListNode<T> pointer = root.Head; // 总是向新链表的尾结点
 
             var head1 = list.First;
             var head2 = this.First;
+
             while (head1 != null && head2 != null)
             {
                 if (head1.Value.CompareTo(head2.Value) < 0)
@@ -213,7 +232,7 @@ namespace LinearList
                     head2 = head2.Next;
                 }
 
-                pointer = pointer.Next;
+                pointer = pointer.Next; // 指向尾结点
             }
 
             if (head1 != null)
@@ -228,5 +247,74 @@ namespace LinearList
 
             return root;
         }
+
+        /// <summary>
+        /// 删除倒数第n个结点
+        /// </summary>
+        /// <remarks>
+        /// 用快慢两个指针，快指针比慢指针早n个结点，然后再同步移动两个指针，当快指针指向尾结点时，慢指针就是将要删除的结点
+        /// LeetCode 编号： 19
+        /// </remarks>
+        /// <param name="n"></param>
+        public void RemoveNthNodeFromEnd(int n)
+        {
+            if (n < 1 || n > Length) return;
+
+            LinkedListNode<T> preNode = Head;
+            LinkedListNode<T> curNode = Head;
+
+            for (int i = 0; i < n; i++)
+            {
+                curNode = curNode.Next;
+            }
+
+            if (curNode == null) return;
+
+            while (curNode.Next != null)
+            {
+                preNode = preNode.Next;
+                curNode = curNode.Next;
+            }
+
+            preNode.Next = preNode.Next.Next;
+        }
+
+        /// <summary>
+        /// 链表的中间结点
+        /// </summary>
+        /// <remarks>
+        /// 思路： 利用快慢指针，快指针步长2，慢指针步长1，当快指针到达尾结点时，慢指针正好到达中间结点
+        /// LeetCode 编号： 876
+        /// </remarks>
+        /// <returns></returns>
+        public LinkedListNode<T> FindMiddleNode()
+        {
+            if (First?.Next == null) return null;
+
+            LinkedListNode<T> slowPointer = First;
+            LinkedListNode<T> fastPointer = First.Next;
+
+            while (fastPointer.Next?.Next != null)
+            {
+                fastPointer = fastPointer.Next.Next;
+                slowPointer = slowPointer.Next;
+            }
+
+            slowPointer = slowPointer.Next;
+            return slowPointer;
+        }
+    }
+
+    public class LinkedListNode<T>
+    {
+        private T _value;
+
+        public LinkedListNode(T value)
+        {
+            _value = value;
+        }
+
+        public T Value => _value;
+        public LinkedListNode<T> Next { get; set; }
     }
 }

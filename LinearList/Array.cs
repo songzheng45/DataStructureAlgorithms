@@ -4,13 +4,13 @@ using System.Text;
 
 namespace LinearList
 {
-    public sealed class SequenceList<T>
+    public sealed class Array<T>
     {
         private T[] _data;
         private int _capacity;
         private int _length;
 
-        public SequenceList (int capacity)
+        public Array (int capacity)
         {
             _data = new T[capacity];
             _capacity = capacity;

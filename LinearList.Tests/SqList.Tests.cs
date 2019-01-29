@@ -4,57 +4,41 @@ using Xunit.Abstractions;
 
 namespace LinearList.Tests
 {
-    public class SequenceListTests
+    public class SqListTests : BaseTests
     {
-        private readonly SequenceList<int> _sqList;
-        private readonly ITestOutputHelper _output;
+        private readonly SqList<int> _sqList;
 
-        public SequenceListTests(ITestOutputHelper output)
+        public SqListTests(ITestOutputHelper output) : base(output)
         {
-            _sqList = new SequenceList<int>(10);
-            _output = output;
-        }
-
-        private void PrintList()
-        {
-            for (int idx = 0; idx < _sqList.Length; idx++)
-            {
-                var elem = _sqList.Find(idx + 1);
-                _output.WriteLine(elem.ToString());
-            }
-        }
-
-        [Fact]
-        public void Length_Equal_0_When_List_Is_Empty()
-        {
-            Assert.True(_sqList.Length == 0);
+            _sqList = new SqList<int>(10);
         }
 
         [Fact]
         public void Length_Equal_1_After_InsertOneElement()
         {
-            _sqList.Insert(1, 1);
+            _sqList.Insert(0, 1);
             Assert.True(_sqList.Length == 1);
         }
 
         [Fact]
-        public void Insert_ThrowIndexOutOfRangeException_When_PositionGreaterThanLength()
+        public void Insert_ThrowIndexOutOfRangeException_When_Index_GreaterThan_Length()
         {
-            _sqList.Insert(1, 1);
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Insert(3, 1));
+            _sqList.Insert(0, 1);
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Insert(3, 2));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
         [Fact]
-        public void Insert_ThrowIndexOutOfRangeException_When_PositionLessThanOne()
+        public void Insert_ThrowIndexOutOfRangeException_When_Index_LessThan_Zero()
         {
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Insert(0, 1));
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Insert(-1, 1));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
         [Fact]
         public void Insert_ThrowIndexOutOfRangeException_When_List_Is_Full()
         {
+            _sqList.Insert(0, 11);
             _sqList.Insert(1, 10);
             _sqList.Insert(2, 9);
             _sqList.Insert(3, 8);
@@ -64,76 +48,80 @@ namespace LinearList.Tests
             _sqList.Insert(7, 4);
             _sqList.Insert(8, 3);
             _sqList.Insert(9, 2);
-            _sqList.Insert(10, 1);
-            
-            PrintList();
 
-            Exception ex = Assert.Throws<OutOfMemoryException>(() => _sqList.Insert(11, 101));
+            PrintSqList(_sqList);
+
+            Exception ex = Assert.Throws<OutOfMemoryException>(() => _sqList.Insert(10, 101));
             Assert.IsType<OutOfMemoryException>(ex);
         }
 
         [Fact]
-        public void Delete_ThrowIndexOutOfRangeException_When_PositionLessThanOne()
+        public void Delete_ThrowIndexOutOfRangeException_When_Index_LessThan_Zero()
         {
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Delete(0));
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Delete(-1));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
         [Fact]
-        public void Delete_ThrowIndexOutOfRangeException_When_PositionGreaterThanLength()
+        public void Delete_ThrowIndexOutOfRangeException_When_Index_GreaterThan_Length()
         {
-            _sqList.Insert(1, 11);
-            _sqList.Insert(2, 22);
+            _sqList.Insert(0, 11);
+            _sqList.Insert(1, 22);
             Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Delete(3));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
         [Fact]
-        public void Delete_First_Element()
+        public void Delete_First_Element_Success()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
 
-            var elem = _sqList.Delete(1);
-            Assert.Equal(11, elem);
+            bool ret = _sqList.Delete(1);
+            Assert.True(ret);
         }
 
         [Fact]
-        public void Delete_Last_Element()
+        public void Delete_Last_Element_Success()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
 
-            var elem = _sqList.Delete(3);
-            Assert.Equal(33, elem);
+            bool ret = _sqList.Delete(3);
+            Assert.True(ret);
         }
 
         [Fact]
         public void Delete_Middle_Element()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
 
-            var elem = _sqList.Delete(2);
-            Assert.Equal(22, elem);
+            bool ret = _sqList.Delete(2);
+            Assert.True(ret);
         }
 
         [Fact]
-        public void GetElem_ThrowsIndexOutOfRangeException_When_PositionLessThanZero()
+        public void Find_ThrowsIndexOutOfRangeException_When_Index_LessThan_Zero()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
 
-            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Find(0));
+            Exception ex = Assert.Throws<IndexOutOfRangeException>(() => _sqList.Find(-1));
             Assert.IsType<IndexOutOfRangeException>(ex);
         }
 
         [Fact]
-        public void GetElem_ThrowsIndexOutOfRangeException_When_PositionGreaterThanLength()
+        public void Find_ThrowsIndexOutOfRangeException_When_Index_GreaterThan_Length()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
@@ -143,8 +131,9 @@ namespace LinearList.Tests
         }
 
         [Fact]
-        public void GetElem_Last_Position_Return_33()
+        public void Find_Last_Position_Return_33()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
@@ -155,12 +144,12 @@ namespace LinearList.Tests
         }
 
         [Fact]
-        public void GetElem_First_Position_Return_11()
+        public void Find_First_Element_Return_11()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
-
 
             var elem = _sqList.Find(1);
 
@@ -168,8 +157,9 @@ namespace LinearList.Tests
         }
 
         [Fact]
-        public void IndexOf_Return_Netagive1_When_Element_Not_Exist()
+        public void IndexOf_Return_Negative_1_When_Element_Not_Exist()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
@@ -182,11 +172,12 @@ namespace LinearList.Tests
         [Fact]
         public void IndexOf_Return_First_Index()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
 
-            var elem = _sqList.IndexOf(11);
+            var elem = _sqList.IndexOf(100);
 
             Assert.Equal(0, elem);
         }
@@ -194,18 +185,20 @@ namespace LinearList.Tests
         [Fact]
         public void IndexOf_Return_Last_Index()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 11);
             _sqList.Insert(2, 22);
             _sqList.Insert(3, 33);
 
             var elem = _sqList.IndexOf(33);
 
-            Assert.Equal(2, elem);
+            Assert.Equal(3, elem);
         }
 
         [Fact]
-        public void Clear_Length_Equal_Zero_If_Empty()
+        public void Clear_Then_Length_Equal_Zero()
         {
+            _sqList.Insert(0, 100);
             _sqList.Insert(1, 10);
             _sqList.Insert(2, 9);
             _sqList.Insert(3, 8);
@@ -215,7 +208,6 @@ namespace LinearList.Tests
             _sqList.Insert(7, 4);
             _sqList.Insert(8, 3);
             _sqList.Insert(9, 2);
-            _sqList.Insert(10, 1);
 
             Assert.Equal(10, _sqList.Length);
 
